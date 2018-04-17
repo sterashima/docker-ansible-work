@@ -12,4 +12,8 @@ ADD ./ssh/ansible_rsa.pub /root/.ssh/
 RUN chmod 700 /root/.ssh
 RUN chmod 600 /root/.ssh/*
 
+RUN yum install -y ruby ruby-dev gem rake 
+
+RUN gem install serverspec
+
 CMD ["/sbin/init", "-D"]

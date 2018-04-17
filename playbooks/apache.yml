@@ -1,0 +1,46 @@
+- hosts: server
+  become: True
+  tasks:
+  - name: install httpd
+    yum: name=httpd
+  - name: restart httpd
+    systemd: 
+      name: httpd 
+      state: restarted
+      daemon_reload: yes
+      enabled: yes
+  - name: install firewalld
+    yum: name=firewalld
+  - name: restart firewalld
+    systemd: 
+      name: firewalld 
+      state: restarted
+      daemon_reload: yes
+      enabled: yes
+  - name: firewalld https enabled
+    firewalld: 
+      service: https
+      permanent: true
+      state: enabled
+    notify: reload firewalld
+  - name: firewall http enabled
+    firewalld: 
+      service: http
+      permanent: true 
+      state: enabled
+    notify: reload firewalld
+  - name: check remi-release-7
+    stat: path=/etc/yum.repos.d/remi-php56.repo
+    register: remi_release_7
+  - name: install remi-56 repo
+    yum:
+      name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+      state: latest
+    when: remi_release_7.stat.exists == false
+  - name: install php packages
+    yum: name={{ item }} state=present enablerepo=remi,remi-php56
+    with_items:
+      - php
+      - php-devel
+      - php-mbstring
+      - php-mcrypt

@@ -27,34 +27,40 @@ myansibleコンテナでansibleコマンドを実行し、各ゲスト環境を�
 
 以下のコマンドでゲスト環境＋ansible環境が起動されます
 ```
-> docker-compose up -d
+docker-compose up -d
 ```
 
-# ansible環境を利用する
+# 環境を利用する
 
 ```
-> docker exec -it xxx(myansibleコンテナID) /bin/bash
+docker-compose exec myansible bash
 ```
+# ansible 
 
-# 疎通確認
+## 疎通確認
 
 ubuntuとcentosにpingを送るテスト  
 
 myansibleコンテナで以下のコマンドを実行
 ```
-> ansible all -m ping
+ansible all -m ping
 ```
 
-# playbookの実行
+## playbookの実行
 
 playbooksをmyansibleコンテナの/playbooksにマウントしているので  
 playbooks内に定義ファイルを作成し、myansibleコンテナで実行してください
 
 ```
-> ansible-playbook all /playbooks/xxxx.yml
+ansible-playbook all /playbooks/xxxx.yml
 ```
 
-# ゲスト環境が増えた場合
+## ゲスト環境が増えた場合
 
 1. docker-compose.ymlのmyansibleサービスのlinksに増やしたゲストのサービス名を追加
 2. config/ansible_hostsに手順1で追加したサービス名を追加
+
+# ServerSpec
+
+## 初期化
+
